@@ -13,5 +13,6 @@ gem "http_parser.rb", "= 0.6.0.beta.2"
 
 group :development do
   gem "rake", "= 10.3.2"
+  gem "pry"
 end
 
