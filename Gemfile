@@ -8,6 +8,7 @@ gem "pg", "= 0.17.1"
 gem "eventmachine" ,"= 1.0.3"
 gem "em-synchrony", "= 1.0.3"
 gem "em-http-request", "= 1.1.1"
+gem "http_parser.rb", "= 0.6.0.beta.2"
 
 
 group :development do
