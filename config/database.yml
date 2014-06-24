@@ -1,10 +1,9 @@
-# production: &production
-#   timeout:   10.0
-#   nonblock:  true
-#   host:      'localhost'
-#   dbname:    'learning'
-#   user:      'rodney'
-#   password:  'qwerty'
-# development:
-#   <<: *production
+production: &production
+  hostname:  'localhost'
+  username:  'root'
+  password:  'qwety'
+  database:  'anshabdul'
+  reconnect:  true
+development:
+  <<: *production
 

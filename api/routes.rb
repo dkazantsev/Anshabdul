@@ -15,9 +15,13 @@ module Anshabdul
 
 
     post '/keystone/token' do
-      error!("Missing parameters", 500) unless params[:account_id].present? and params[:group_id].present?
+      account_id, group_id = params[:account_id], params[:group_id]
 
-      # uid and gid regex
+      error!("Bad parameters", 500) unless (account_id =~ uid_regex and group_id =~ uid_regex)
+
+      user = Anshabdul::Storage.find_user_db(account_id, group_id)
+
+      binding.pry
 
       # DB.where(account_id = $1 and group_id = $2, params[:account_id], params[:group_id])
       # sleep(1)

@@ -14,17 +14,19 @@ require 'goliath'
 require 'api'
 require 'anshabdul_app'
 
+# require 'eventmachine'
 require 'fiber'
 require 'em-synchrony/em-http'
-# require 'eventmachine'
+require 'em-synchrony/mysql2'
 
-# require 'pg'
 require 'erb'
 
 environment = ENV['RACK_ENV']
 
-#db = YAML.load(ERB.new(File.read(File.expand_path('../database.yml', __FILE__))).result)[environment]
-# Anshabdul::DBLayer.configure(db)
-
 keystone = YAML.load(ERB.new(File.read(File.expand_path('../keystone.yml', __FILE__))).result)[environment]
 Anshabdul::Keystone.config(keystone)
+
+mysql = YAML.load(ERB.new(File.read(File.expand_path('../database.yml', __FILE__))).result)[environment]
+Anshabdul::Storage.config(mysql)
+
+config["uid_regex"] = /\A[\dabcdef]+\z/
