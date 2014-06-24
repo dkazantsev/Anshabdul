@@ -25,6 +25,16 @@ module Anshabdul
     #   { result: "ok" }
     # end
 
+    post '/keystone/token' do
+      # error!("Missing parameters", 500) unless params[:account_id]
+
+      # curl -H "Content-Type: application/json" -d \
+      # '{"auth": {"tenantName": "admin", "passwordCredentials": {"username": "admin", "password": "qwerty"}}}' \
+      # http://localhost:35357/v2.0/tokens
+
+      binding.pry
+    end
+
   end
 end
 
