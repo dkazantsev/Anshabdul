@@ -17,7 +17,8 @@ require 'anshabdul_app'
 # require 'eventmachine'
 require 'fiber'
 require 'em-synchrony/em-http'
-require 'em-synchrony/mysql2'
+require 'em-synchrony/activerecord'
+# require 'em-synchrony/mysql2'
 
 require 'json'
 require 'securerandom'
@@ -31,3 +32,9 @@ Anshabdul::Keystone.config(keystone)
 
 mysql = YAML.load(ERB.new(File.read(File.expand_path('../database.yml', __FILE__))).result)[environment]
 Anshabdul::Storage.config(mysql)
+
+ActiveRecord::Base.establish_connection(mysql)
+
+Dir[File.expand_path('../../api/models/*.rb', __FILE__)].each do |f|
+  require f
+end

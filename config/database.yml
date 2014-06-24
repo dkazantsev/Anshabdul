@@ -1,9 +1,9 @@
 production: &production
-  host:     'localhost'
+  adapter:   'em_mysql2'
   username:  'root'
   password:  'qwerty'
   database:  'anshabdul'
-  reconnect:  true
+  pool:       10
 development:
   <<: *production
 

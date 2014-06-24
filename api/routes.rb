@@ -19,7 +19,7 @@ module Anshabdul
         error!("Unable to add user", 500) unless credentials
 
         # Store uid, gid and random generated credentials as user record
-        Anshabdul::Storage.create_user_db(
+        error!("Duplicate user", 500) unless Anshabdul::Storage.create_user_db(
           account_id, group_id, credentials[:username], credentials[:password])
 
         # Run shell script to create user's personal storage

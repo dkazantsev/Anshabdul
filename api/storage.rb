@@ -4,10 +4,6 @@ module Anshabdul
     class << self
 
       def config(config)
-        @@conn = EM::Synchrony::ConnectionPool.new(size: 20) do
-          ::Mysql2::EM::Client.new(config)
-        end
-
         instance_eval %{
           @@username = config["username"]
           @@password = config["password"]
@@ -16,20 +12,22 @@ module Anshabdul
 
 
       def find_user_db(account_id, group_id)
-        user = @@conn.query(
-          "select * from users where account_id = '%s' and group_id = '%s' limit 1" % 
-          [account_id, group_id])
+        user = User.where(account_id: account_id, group_id: group_id).first        
+        return nil unless user
         
-        return nil unless user.first.present?
-        
-        {username: user.first["keystone_user"], password: user.first["keystone_pass"]}
+        {username: user["keystone_user"], password: user["keystone_pass"]}
       end
       
 
       def create_user_db(account_id, group_id, keystone_user, keystone_pass)
-        @@conn.query(
-          "insert into users values ('%s', '%s', '%s', '%s')" % 
-          [account_id, group_id, keystone_user, keystone_pass])
+        User.create!(
+          account_id: account_id,
+          group_id: group_id,
+          keystone_user: keystone_user,
+          keystone_pass: keystone_pass
+        )
+      rescue
+        nil
       end
 
 

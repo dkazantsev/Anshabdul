@@ -11,6 +11,8 @@ gem "em-synchrony", "= 1.0.3"
 gem "em-http-request", "= 1.1.1"
 gem "http_parser.rb", "= 0.6.0.beta.2"
 
+gem "activerecord", "= 4.1.1", require: "active_record"
+
 
 group :development do
   gem "rake", "= 10.3.2"
