@@ -8,18 +8,16 @@ module Anshabdul
 
       error!("Bad request", 500) unless (account_id =~ /\A[\dabcdef]+\z/ and group_id =~ /\A[\dabcdef]+\z/)
 
-      user = Anshabdul::Storage.find_user_db(account_id, group_id)
+      credentials = Anshabdul::Storage.find_user_db(account_id, group_id)
 
-      binding.pry
+      unless credentials
+        credentials = Anshabdul::Keystone.create_user_keystone
 
-      # rememer about cocurrency
-
-      unless user
-        keystone_user_id = Anshabdul::Keystone.create_user_keystone
-        user = Anshabdul::Storage.create_user_db(account_id, group_id, keystone_user_id)
+        Anshabdul::Storage.create_user_db(
+          account_id, group_id, credentials[:username], credentials[:password])
       end
 
-      Anshabdul::Keystone.request_token(user.keystone_user_id)
+      Anshabdul::Keystone.request_token(credentials)
     end
 
   end

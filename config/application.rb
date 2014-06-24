@@ -19,6 +19,8 @@ require 'fiber'
 require 'em-synchrony/em-http'
 require 'em-synchrony/mysql2'
 
+require 'securerandom'
+
 require 'erb'
 
 environment = ENV['RACK_ENV']

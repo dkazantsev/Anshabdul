@@ -10,34 +10,55 @@ module Anshabdul
       end
 
       # various functions
+      
 
       def create_user_keystone
-        # ask keystone to create new user with
-        # given name, extra and password
+        return {username: SecureRandom.hex(4), password: SecureRandom.hex(10)}
 
-        # better to create disabled user
-
+        uri = "http://#{@@host}:#{@@port}/#{@@api}/users"
 
         head = {:"Content-Type" => "application/json", :"X-Auth-Token" => @@token}
-        body = {auth: {tenantName: 'admin', passwordCredentials: {username: 'admin', password: 'qwerty'}}}
+
+        credentials = {username: SecureRandom.hex(4), password: SecureRandom.hex(10)}
+        
+        body = {:user => {
+          :name => credentials[:username],
+          :enabled => true,
+          :"OS-KSADM:password" => credentials[:password]
+        }}        
+
+        http = EM::HttpRequest.new(uri).post body: body, head: head
+
+        response = JSON.parse(http.response)
+
+        p response
+
+        error!("Unable to add user", 500) unless response["user"] and response["user"]["id"]
+
+        credentials
+      end
+
+      def request_token(user)
+        return {token: 'ad34235efdf'}
+
         uri = "http://#{@@host}:#{@@port}/#{@@api}/tokens"
 
-        # "http://0.0.0.0:9292/?q=#{uri}"
+        head = {:"Content-Type" => "application/json"}
+
+        # FIXME: delete tenant
+
+        body = {auth: {
+          tenantName: 'admin',
+          passwordCredentials: {username: 'admin', password: 'qwerty'}
+        }}
         
         http = EM::HttpRequest.new(uri).post body: body, head: head
 
-        http.response
+        response = JSON.parse(http.response)
 
-        # '3eb0268cc3124d158b4d98750304c2e6' # return keystone_user_id
-      end
+        p response
 
-      def request_token(keystone_user_id)
-        # sleep(1)
-
-        #res = JSON.parse(smth)
-        # res["access"]["token"]["id"]
-
-        { token: 'i_am_token' }
+        {token: response["access"]["token"]["id"]}
       end
 
     end

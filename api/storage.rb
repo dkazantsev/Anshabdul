@@ -14,11 +14,15 @@ module Anshabdul
           "select * from users where account_id = '%s' and group_id = '%s' limit 1" % 
           [account_id, group_id])
         
-        user.first.present? ? user.first : nil
+        return nil unless user.first.present?
+        
+        {username: user.first["keystone_user"], password: user.first["keystone_pass"]}
       end
 
-      def create_user_db(account_id, group_id, keystone_user_id)
-        @@conn.query("insert into users values (account_id, group_id, keystone_user_id)")
+      def create_user_db(account_id, group_id, keystone_user, keystone_pass)
+        @@conn.query(
+          "insert into users values ('%s', '%s', '%s', '%s')" % 
+          [account_id, group_id, keystone_user, keystone_pass])
       end
 
     end
