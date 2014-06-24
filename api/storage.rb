@@ -7,6 +7,11 @@ module Anshabdul
         @@conn = EM::Synchrony::ConnectionPool.new(size: 20) do
           ::Mysql2::EM::Client.new(config)
         end
+
+        instance_eval %{
+          @@username = config["username"]
+          @@password = config["password"]
+        }
       end
 
 
@@ -25,6 +30,16 @@ module Anshabdul
         @@conn.query(
           "insert into users values ('%s', '%s', '%s', '%s')" % 
           [account_id, group_id, keystone_user, keystone_pass])
+      end
+
+
+      def create_billing_db(label)
+        system %Q{
+          mysql -u#{@@username} -p#{@@password} -e ' \
+          create database #{label}; \
+          connect #{label}; \
+          create table `usage` (account_id varchar(255), group_id varchar(255));'
+        }
       end
 
     end

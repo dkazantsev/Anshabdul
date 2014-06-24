@@ -1,11 +1,15 @@
 module Anshabdul
   class Routes < Grape::API
 
+    require 'pry'
+
     post '/keystone/token' do
       account_id, group_id = params[:account_id], params[:group_id]
 
       # Check uid and gid for presense and hex format
       error!("Bad request", 500) unless (account_id =~ /\A[\dabcdef]+\z/ and group_id =~ /\A[\dabcdef]+\z/)
+
+      binding.pry
 
       # Look for user in local database, load his username and password
       credentials = Anshabdul::Storage.find_user_db(account_id, group_id)
@@ -21,6 +25,9 @@ module Anshabdul
         # Store uid, gid and random generated credentials as user record
         Anshabdul::Storage.create_user_db(
           account_id, group_id, credentials[:username], credentials[:password])
+
+        # Run shell script to create user's personal storage
+        Anshabdul::Storage.create_billing_db(credentials[:username])
       end
 
       # Ask Keystone for temporary token
