@@ -4,6 +4,8 @@ module Anshabdul
     class << self
 
       def config(config)
+        @@config
+
         instance_eval %{
           @@username = config["username"]
           @@password = config["password"]
@@ -31,13 +33,22 @@ module Anshabdul
       end
 
 
-      def create_billing_db(label)
-        system %Q{
-          mysql -u#{@@username} -p#{@@password} -e ' \
-          create database #{label}; \
-          connect #{label}; \
-          create table `usage` (account_id varchar(255), group_id varchar(255));'
-        }
+      def create_billing_db(db_name)
+        options = {charset: 'utf8', collation: 'utf8_unicode_ci'}
+
+        config = @@config.dup.symbolize_keys
+        config.merge!(database: db_name)
+
+        ActiveRecord::Base.establish_connection(config.except(:database))
+        ActiveRecord::Base.connection.create_database(db_name, options)
+        ActiveRecord::Base.establish_connection(config)
+
+        ActiveRecord::Base.connection.execute(
+          'create table `usage` (account_id varchar(255), group_id varchar(255));')
+
+        ActiveRecord::Base.connection.close
+      rescue
+        nil
       end
 
     end

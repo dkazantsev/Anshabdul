@@ -19,11 +19,11 @@ module Anshabdul
         error!("Unable to add user", 500) unless credentials
 
         # Store uid, gid and random generated credentials as user record
-        error!("Duplicate user", 500) unless Anshabdul::Storage.create_user_db(
+        error!("Duplicable user", 500) unless Anshabdul::Storage.create_user_db(
           account_id, group_id, credentials[:username], credentials[:password])
 
         # Run shell script to create user's personal storage
-        Anshabdul::Storage.create_billing_db(credentials[:username])
+        error!("Duplicable database", 500) unless Anshabdul::Storage.create_billing_db(credentials[:username])
       end
 
       # Ask Keystone for temporary token
