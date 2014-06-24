@@ -1,7 +1,7 @@
 production: &production
-  hostname:  'localhost'
+  host:     'localhost'
   username:  'root'
-  password:  'qwety'
+  password:  'qwerty'
   database:  'anshabdul'
   reconnect:  true
 development:

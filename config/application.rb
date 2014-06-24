@@ -28,5 +28,3 @@ Anshabdul::Keystone.config(keystone)
 
 mysql = YAML.load(ERB.new(File.read(File.expand_path('../database.yml', __FILE__))).result)[environment]
 Anshabdul::Storage.config(mysql)
-
-config["uid_regex"] = /\A[\dabcdef]+\z/
