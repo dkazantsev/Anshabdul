@@ -19,6 +19,7 @@ require 'fiber'
 require 'em-synchrony/em-http'
 require 'em-synchrony/mysql2'
 
+require 'json'
 require 'securerandom'
 
 require 'erb'

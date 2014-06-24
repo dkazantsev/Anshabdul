@@ -9,6 +9,7 @@ module Anshabdul
         end
       end
 
+
       def find_user_db(account_id, group_id)
         user = @@conn.query(
           "select * from users where account_id = '%s' and group_id = '%s' limit 1" % 
@@ -18,6 +19,7 @@ module Anshabdul
         
         {username: user.first["keystone_user"], password: user.first["keystone_pass"]}
       end
+      
 
       def create_user_db(account_id, group_id, keystone_user, keystone_pass)
         @@conn.query(

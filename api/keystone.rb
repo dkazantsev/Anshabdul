@@ -9,12 +9,8 @@ module Anshabdul
         end
       end
 
-      # various functions
-      
 
       def create_user_keystone
-        return {username: SecureRandom.hex(4), password: SecureRandom.hex(10)}
-
         uri = "http://#{@@host}:#{@@port}/#{@@api}/users"
 
         head = {:"Content-Type" => "application/json", :"X-Auth-Token" => @@token}
@@ -27,36 +23,26 @@ module Anshabdul
           :"OS-KSADM:password" => credentials[:password]
         }}        
 
-        http = EM::HttpRequest.new(uri).post body: body, head: head
+        http = EM::HttpRequest.new(uri).post body: JSON(body), head: head
 
         response = JSON.parse(http.response)
 
-        p response
-
-        error!("Unable to add user", 500) unless response["user"] and response["user"]["id"]
+        return nil unless response["user"] and response["user"]["id"]
 
         credentials
       end
 
-      def request_token(user)
-        return {token: 'ad34235efdf'}
 
+      def request_token(user)
         uri = "http://#{@@host}:#{@@port}/#{@@api}/tokens"
 
         head = {:"Content-Type" => "application/json"}
 
-        # FIXME: delete tenant
-
-        body = {auth: {
-          tenantName: 'admin',
-          passwordCredentials: {username: 'admin', password: 'qwerty'}
-        }}
+        body = {auth: {passwordCredentials: {username: 'admin', password: 'qwerty'}}}
         
-        http = EM::HttpRequest.new(uri).post body: body, head: head
+        http = EM::HttpRequest.new(uri).post body: JSON(body), head: head
 
         response = JSON.parse(http.response)
-
-        p response
 
         {token: response["access"]["token"]["id"]}
       end
