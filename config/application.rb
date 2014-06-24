@@ -15,13 +15,16 @@ require 'api'
 require 'anshabdul_app'
 
 require 'fiber'
-# require 'em-synchrony/em-http'
-require 'eventmachine'
+require 'em-synchrony/em-http'
+# require 'eventmachine'
 
-require 'pg'
+# require 'pg'
 require 'erb'
 
 environment = ENV['RACK_ENV']
 
 #db = YAML.load(ERB.new(File.read(File.expand_path('../database.yml', __FILE__))).result)[environment]
 # Anshabdul::DBLayer.configure(db)
+
+keystone = YAML.load(ERB.new(File.read(File.expand_path('../keystone.yml', __FILE__))).result)[environment]
+Anshabdul::Keystone.config(keystone)

@@ -1,0 +1,7 @@
+production: &production
+  token:      '27877321242e87039f1e'
+  host:       'localhost'
+  port:       '35357'
+  api:        'v2.0'
+development:
+  <<: *production

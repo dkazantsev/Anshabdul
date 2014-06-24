@@ -5,34 +5,34 @@ module Anshabdul
 
     get '/ping' do
 
-      g = EM::HttpRequest.new("http://google.com/index.html").get
-      puts "Received #{g.response_header.status} from Google"
+      # g = EM::HttpRequest.new("http://google.com/index.html").get
+      # puts "Received #{g.response_header.status} from Google"
 
-      [200, {'X-Goliath' => 'Proxy'}, g.response]
+      # [200, {'X-Goliath' => 'Proxy'}, g.response]
+
+      binding.pry
     end
 
 
-    # get '/cities' do
-    #   # binding.pry
-
-    #   Fiber.new do
-    #     @results = Anshabdul::DBLayer.async_query('select * from cities')
-
-    #     print "Server said: "
-    #     @results.each { |res| puts res.values.inspect }
-    #   end.resume
-
-    #   { result: "ok" }
-    # end
-
     post '/keystone/token' do
-      # error!("Missing parameters", 500) unless params[:account_id]
+      error!("Missing parameters", 500) unless params[:account_id].present? and params[:group_id].present?
 
-      # curl -H "Content-Type: application/json" -d \
-      # '{"auth": {"tenantName": "admin", "passwordCredentials": {"username": "admin", "password": "qwerty"}}}' \
-      # http://localhost:35357/v2.0/tokens
+      # uid and gid regex
 
-      binding.pry
+      # DB.where(account_id = $1 and group_id = $2, params[:account_id], params[:group_id])
+      # sleep(1)
+
+      # keystone_user_id = db.result.keystone_user_id
+      keystone_user_id = nil
+
+      unless keystone_user_id
+        keystone_user_id = Anshabdul::Keystone.create_user_keystone
+        Anshabdul::Storage.create_user_db(keystone_user_id, params[:account_id], params[:group_id])
+      end
+
+      keystone_user_id ||= '3eb0268cc3124d158b4d98750304c2e6'
+
+      Anshabdul::Keystone.request_token(keystone_user_id)
     end
 
   end
