@@ -12,18 +12,18 @@ module Anshabdul
     end
 
 
-    get '/cities' do
-      # binding.pry
+    # get '/cities' do
+    #   # binding.pry
 
-      Fiber.new do
-        @results = Anshabdul::DBLayer.async_query('select * from cities')
+    #   Fiber.new do
+    #     @results = Anshabdul::DBLayer.async_query('select * from cities')
 
-        print "Server said: "
-        @results.each { |res| puts res.values.inspect }
-      end.resume
+    #     print "Server said: "
+    #     @results.each { |res| puts res.values.inspect }
+    #   end.resume
 
-      { result: "ok" }
-    end
+    #   { result: "ok" }
+    # end
 
   end
 end

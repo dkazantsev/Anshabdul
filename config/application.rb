@@ -22,6 +22,6 @@ require 'pg'
 require 'erb'
 
 environment = ENV['RACK_ENV']
-db = YAML.load(ERB.new(File.read(File.expand_path('../database.yml', __FILE__))).result)[environment]
 
-Anshabdul::DBLayer.configure(db)
+#db = YAML.load(ERB.new(File.read(File.expand_path('../database.yml', __FILE__))).result)[environment]
+# Anshabdul::DBLayer.configure(db)
